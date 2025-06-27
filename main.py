@@ -1,25 +1,36 @@
-# https://www.nytimes.com/games/wordle/index.html
-from playwright.sync_api import sync_playwright
+from dotenv import load_dotenv
 from page_actions import init_wordle, enter_word
-from utils import check_len
+from llm import llm_guess, llm_eval
 
 def main():
-    first_guess = "break"
-    if not check_len:
-        return 
     
-    p, browser, page = init_wordle(first_guess)
-    enter_word(page, first_guess)
+    req_word_len = 5
+    screen_path = "image/wordlecapture.png"
 
-    page.screenshot(path=f"example.png")
+    # init environment
+    p, browser, page = init_wordle()
+    load_dotenv() # use a .env file with OPENAI_API_KEY
+
+    found = False
+    finished = False
+
+    while not found and not finished:
+        page.screenshot(path=screen_path)
+        found, finished = llm_eval(screen_path)
+
+        guess = llm_guess(screen_path, req_word_len)
+        if not enter_word(page, guess):
+            break
+        print(f"LLM guessed: {guess}")
 
     browser.close()
     p.stop()
 
-
+    if found:
+        print("Word found succesfully!")
+        return
+    
+    print("Didn't find word :(")
 
 if __name__ == "__main__":
     main()
-
-
-
