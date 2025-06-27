@@ -23,7 +23,7 @@ def llm_guess(image_path, req_word_len):
                 "content": [
                     {
                         "type": "text",
-                        "text": f"Your job is to play wordle, I want you to think about all the possible combinations of words and suggest the next line based on the letters in the image. Please return a {req_word_len} string, and **output only that word**—no explanations. If there are no letters selected yet, use the first word."
+                        "text": f"Your job is to play wordle, I want you to think about all the possible combinations of words and suggest the next line based on the letters in the image. Please return a {req_word_len} string, and **output only that word**—no explanations. If you see that not a lot of letters are green or yellow you should focus on giving an anwer that uncovers a lot of letters. If there are no letters selected yet, start the first word. NEVER REPEAT THE SAME WORD AND GIVE ONLY {req_word_len} AMOUNT OF CHARACTERS BACK. thank you!"
                     },
                     {
                         "type": "image_url",
@@ -46,7 +46,7 @@ def llm_eval(image_path):
         base64_img = base64.b64encode(image_file.read()).decode("utf-8")
 
         completion = client.chat.completions.parse(
-        model="gpt-4.1",
+        model="gpt-4.1-nano-2025-04-14",
         messages=[{
             "role": "user",
             "content": [
