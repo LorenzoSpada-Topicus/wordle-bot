@@ -7,16 +7,18 @@ class GameStatus(BaseModel):
     found: bool
     finished: bool
 
+model = "o4-mini-2025-04-16"
 
 def llm_guess(image_path, req_word_len):
 
     client = OpenAI()
+    
 
     with open(image_path, "rb") as image_file:
         base64_img = base64.b64encode(image_file.read()).decode("utf-8")
 
     completion = client.chat.completions.create(
-        model="gpt-4.1-nano-2025-04-14",
+        model=model,
         messages=[
             {
                 "role": "user",
@@ -46,7 +48,7 @@ def llm_eval(image_path):
         base64_img = base64.b64encode(image_file.read()).decode("utf-8")
 
         completion = client.chat.completions.parse(
-        model="gpt-4.1-nano-2025-04-14",
+        model=model,
         messages=[{
             "role": "user",
             "content": [
